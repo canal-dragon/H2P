@@ -8,12 +8,14 @@ A pdf file H2P-help-Text.pdf contains more information about the program.
 H2P uses 4 base pptx files, kept in the provate data directory, to modify by 
 injecting the requred hymns.
 
-The hymns are stored as text files in the 'hymns' subdirectory.
+The hymns are stored as text files in the 'hymns' subdirectory. Subdirectories of
+the hymns directory can be used to organise many hundreds of hymns. 
 There is some very simple mark up in the text files to format how the hymn will appear 
 on the slides of the presentation.
-I have the whole of the British Methodist Hymn book in my hymns directory but 
+I have the whole of the British Methodist Hymn book 'Singing the Faith' in my hymns directory but 
 for Git-hub, for copyright compliance, I have just given three out-of-copyright hymns 
-as examples. 
+as examples. I can share with other churches using STF and having a CCLI Licnce on request.
+(Chris.Jones.Europe@gmail.com)
 
 H2P uses two alternative fonts, one sans serif, the other serif. These should be 
 installed both on the computer on which the presentation is prepared and on the one from 
