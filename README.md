@@ -38,4 +38,4 @@ There are 3 simple steps (1) Choose up to 7 hymns in the main panel,
 (3) Press 'make presentation' .. and a file called hymn-words.pptx will appear on the 
 desktop. 
 
-
+H2P uses python-pptx (https://github.com/scanny/python-pptx) -- excellent, thankyou, and pyside6 for the interface.
