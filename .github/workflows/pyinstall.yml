@@ -37,7 +37,7 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller --onefile  --icon ./H2P-private-data/H2P-ico.ico --nowindowed ${{ env.MAIN_PY_FILE }} --target-arch universal2
+        pyinstaller --onefile  --icon ./H2P-private-data/H2P-ico.ico --nowindowed  --target-arch x86_64 ${{ env.MAIN_PY_FILE }}
       working-directory: ./
 
     - name: Create Artifact (Windows)
