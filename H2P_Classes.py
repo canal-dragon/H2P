@@ -4,7 +4,7 @@ Class to contain a hymn
 Class to contain the whole hymn book once compiled from all available hymns.
 
 Part of H2P source code
-CJCJ 06/12/2025
+CJCJ 03/03/2026
 """
 import H2P_cfg as cfg
 
@@ -45,6 +45,7 @@ class HYMN():
         self.hymnNumber = hymnNumber
         self.bookVerseNumber = bookVerseNumber
         self.topBookVerseNumber = 0
+        self.fontSize = self.set_font_size(self.mostLines, self.longestLine)
         if bool(self.bookVerseNumber): # forced numbering (assume ascending order)
             topKey = max(self.bookVerseNumber, key = self.bookVerseNumber.get)
             self.topBookVerseNumber = int(''.join(char for char in self.bookVerseNumber[topKey] if char.isdigit()))
@@ -59,11 +60,11 @@ class HYMN():
         When hymn object is printed ..
         """
 
-        return self.tag + ":  " + self.firstLine +" : " + str(self.topBookVerseNumber) + " verses, |Lines|  = " + str(self.mostLines) + " |characters| = " + str(self.longestLine)
+        return self.tag + ":  " + self.firstLine +" : " + str(self.topBookVerseNumber) + ":" + str(self.mostLines) + ":" + str(self.longestLine) + ":" + str(self.fontSize)
 
     def readhymn(self, filen, hBlog):
         """
-        Read a file containing the wqords of a hymn into a Hymn object.
+        Read a file containing the words of a hymn into a Hymn object.
         filen is either a string containing a path/filename or a posixPath object.
         
         """
@@ -309,6 +310,47 @@ class HYMN():
         
         return tag, bookCode, hymnNumber
         
+    def set_font_size(self, mostLines, longestLine):
+        """
+        The object of this is to use a large a font size as (safely) possible
+        for the hymn words.
+        
+        This only applies to verses and choruses (hymn numbers and attributions
+        use a fixed size font)
+        . 
+        The font size does not change for a hymn but different hymns
+        may use a differnt font size in the same presentation.
+
+        The font sizes are suitable for the "source serif pro" font
+        """
+
+        fontSize = 25 # safe(ish) default for up to 62 chars
+        if (mostLines <= 11) and (longestLine <= 60):
+            fontsize = 26
+        if (mostLines <= 10) and (longestLine <= 55):
+            fontSize = 28
+        if (mostLines <= 10) and (longestLine <= 52):
+            fontSize = 30
+        if (mostLines <= 9) and (longestLine <= 48):
+            fontSize = 32
+        if (mostLines <= 9) and (longestLine <= 46):
+            fontSize = 33
+        if (mostLines <= 8) and (longestLine < 43):
+            fontSize = 34
+        if (mostLines <= 7) and (longestLine <= 41):
+            fontSize = 35
+        if (mostLines <= 7) and (longestLine <= 39):
+            fontSize = 38
+        if (mostLines <= 7) and (longestLine <= 37):
+            fontSize = 40
+        if (mostLines <= 7) and (longestLine <= 35):
+            fontSize = 42
+        if (mostLines <= 6) and (longestLine <= 33):
+            fontSize = 44
+        if (mostLines <= 5) and (longestLine <= 31):
+            fontSize = 46
+                
+        return fontSize
         
 
     

@@ -16,7 +16,7 @@ import H2P_Classes # from local source file
 # Variable declared here become global variables
 # anywhere this file is imported
 
-vers = "Jan 2026"
+vers = "3 Feb 2026"
 
 # settings
 

@@ -1,7 +1,17 @@
 """
 To define the main window of H2P as a class
-
-CJCJ 06-12-2025
+This file also contains all the (callback) routines
+that
+    write_presentation() .. by
+    open_presentation() .. open an existing base pptx
+    for each hymn
+        for each verse or chorus
+            inject_verse (or choruses) into  a new textbox on a new slide
+            inject hymn_number() in a top right-hand box 
+        inject_attribution() at end of each hymn, inject_attribution()
+        inject_blank_slide() between verses
+    
+CJCJ 03-02-2026
 """
 
 import sys
@@ -53,6 +63,7 @@ FONT_NAME = "Andika" # for interface
 INTERFACE_FONT_SIZE = 13
 
 # import so that cfg 'globals' are available in all functions here.
+
 import H2P_cfg as cfg
 
 class MainWindow(QMainWindow):
@@ -1351,47 +1362,6 @@ class MainWindow(QMainWindow):
 
             return currentSlide
 
-        def set_font_size(mostLines, longestLine):
-            """
-            The object of this is to use a large a font size as (safely) possible
-            for the hymn words.
-            
-            This only applies to verses and choruses (hymn numbers and attributions
-            use a fixed size font)
-            . 
-            The font size does not change for a hymn but different hymns
-            may use a differnt font size in the same presentation.
-
-            The font sizes are suitable for the "source serif pro" font
-            """
-
-            fontSize = 25 # safe(ish) default for up to 62 chars
-            if (mostLines <= 11) and (longestLine <= 60):
-                fontsize = 26
-            if (mostLines <= 10) and (longestLine <= 55):
-                fontSize = 28
-            if (mostLines <= 10) and (longestLine <= 52):
-                fontSize = 30
-            if (mostLines <= 9) and (longestLine <= 48):
-                fontSize = 32
-            if (mostLines <= 9) and (longestLine <= 46):
-                fontSize = 33
-            if (mostLines <= 8) and (longestLine < 43):
-                fontSize = 34
-            if (mostLines <= 7) and (longestLine <= 41):
-                fontSize = 35
-            if (mostLines <= 7) and (longestLine <= 39):
-                fontSize = 38
-            if (mostLines <= 7) and (longestLine <= 37):
-                fontSize = 40
-            if (mostLines <= 7) and (longestLine <= 35):
-                fontSize = 42
-            if (mostLines <= 6) and (longestLine <= 33):
-                fontSize = 44
-            if (mostLines <= 5) and (longestLine <= 31):
-                fontSize = 46
-                    
-            return fontSize
 
         # self.buttonMake.setText('Working')
         self.buttonMake.setStyleSheet("color: red") # flash red to make action more visible (windows seems to need this)
@@ -1401,23 +1371,23 @@ class MainWindow(QMainWindow):
         for tag in cfg.tagList:
             if tag in cfg.hymnBook:
                 hymn = cfg.hymnBook[tag]
-                fontSize = set_font_size(hymn.mostLines, hymn.longestLine)
+                fontSize = hymn.fontSize
                 nslides = len(hymn.verse)
                 if hymn.hasChorus:
                     nslides = 2 * nslides
                 slideCount = 0
                 if hymn.chorusFirst:  # chorus is written first
                     slideCount += 1
-                    currentSlide = inject_verse(hymn.chorus, fontSize, isChorus = True)
+                    currentSlide = inject_verse(hymn.chorus, hymn.fontSize, isChorus = True)
                     inject_hymn_number(currentSlide, tag, -1)
                     
                 for iverse in range(0,len(hymn.verse)):
                     slideCount += 1
-                    currentSlide = inject_verse(hymn.verse[iverse], fontSize)
+                    currentSlide = inject_verse(hymn.verse[iverse], hymn.fontSize)
                     inject_hymn_number(currentSlide, tag, iverse) 
                     if hymn.hasChorus:
                         slideCount += 1
-                        currentSlide = inject_verse(hymn.chorus, fontSize, isChorus = True)
+                        currentSlide = inject_verse(hymn.chorus, hymn.fontSize, isChorus = True)
                         inject_hymn_number(currentSlide, tag, iverse, chorus = True)
                     if iverse == len(hymn.verse) - 1: # last slide of hymn
                         inject_attribution(currentSlide, hymn.attribution, hymn.rCode.upper())

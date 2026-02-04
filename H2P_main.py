@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #
 
-# This version 06/12/2025 
+# This version 03/02/2026 
 
 
 import sys
@@ -64,19 +64,26 @@ def main(args):
     
     # read hymnbook.pickled or load AAA_NNN.txt files otherwise
     # needs app to have been started to post message box
-    
-    picklePath = Path('H2P-private-data', 'hymnbook.pickled')
-    if picklePath.exists():
-        dbfile = open(picklePath, 'rb')
-        db = pickle.load(dbfile)
-        cfg.hymnBook = db[0]
-        cfg.bookCodeList = db[1]
-        message = db[2]
-        message = "Using previously saved hymnbook.\n\n" + message
-        message = message + "\n\nThe CCLI number is currently set to \n" + cfg.CCLIList[0] + "."
-        dbfile.close()
+
+    privatePath = Path('H2P-private-data')
+    if privatePath.exists():
+        picklePath = Path('H2P-private-data', 'hymnbook.pickled')
+        if picklePath.exists():
+            dbfile = open(picklePath, 'rb')
+            db = pickle.load(dbfile)
+            cfg.hymnBook = db[0]
+            cfg.bookCodeList = db[1]
+            message = db[2]
+            message = "Using previously saved hymnbook.\n\n" + message
+            message = message + "\n\nThe CCLI number is currently set to \n" + cfg.CCLIList[0] + "."
+            dbfile.close()
+        else:
+            cfg.hymnBook, cfg.bookCodeList, message = cfg.load_hymns()
     else:
-        cfg.hymnBook, cfg.bookCodeList, message = cfg.load_hymns()
+        message = "There is no subdirectory H2P-private-data.\n"
+        message = message + "H2P-private-data must be present and contain\n"
+        message = message + "certain files, otherwise H2P cannot run.\n"
+        message = message + "Please see H2P-help-text.pdf" 
 
     panel = MainWindow()
     panel.show()
