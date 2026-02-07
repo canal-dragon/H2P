@@ -80,9 +80,11 @@ def main(args):
         else:
             cfg.hymnBook, cfg.bookCodeList, message = cfg.load_hymns()
     else:
-        message = "There is no subdirectory H2P-private-data.\n"
-        message = message + "H2P-private-data must be present and contain\n"
-        message = message + "certain files, otherwise H2P cannot run.\n"
+        message = "There is no subdirectory\n"
+        message = message + "H2P-private-data.\n"
+        message = message + "H2P-private-data must be present\n"
+        message = message + "and contain certain files,\n"
+        message = message + "otherwise H2P cannot run.\n"
         message = message + "Please see H2P-help-text.pdf" 
 
     panel = MainWindow()

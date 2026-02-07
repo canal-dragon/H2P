@@ -325,9 +325,9 @@ class HYMN():
         """
 
         fontSize = 25 # safe(ish) default for up to 62 chars
-        if (mostLines <= 11) and (longestLine <= 60):
+        if (mostLines <= 11) and (longestLine <= 58):
             fontsize = 26
-        if (mostLines <= 10) and (longestLine <= 55):
+        if (mostLines <= 11) and (longestLine <= 55):
             fontSize = 28
         if (mostLines <= 10) and (longestLine <= 52):
             fontSize = 30

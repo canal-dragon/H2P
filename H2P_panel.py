@@ -74,14 +74,17 @@ class MainWindow(QMainWindow):
         # set up a nice font for the interface (The presentation may use a different font)
         fontPath = str(Path('.','H2P-private-data','Andika-Regular.ttf'))
         id = QFontDatabase.addApplicationFont(fontPath)
-        if id < 0: print("Error reading font, Andika-Regular.ttf")
-        cfg.families = QFontDatabase.applicationFontFamilies(id)
+        if id < 0:
+            print("Error reading font, Andika-Regular.ttf")
+            cfg.families = QFontDatabase.families()
+        else:
+            cfg.families = QFontDatabase.applicationFontFamilies(id)
 
-        # apply font and sizee to window title 
-        self.setWindowTitle("Hymns \u2192 Presentation")
-        self.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE)) # this sets text font for all children of self, the MainWindow (but not the window title - because that belongs to the desktop(?))
-        iconPath = str(Path('.','H2P-private-data','H2P-ico.png'))
-        self.setWindowIcon(QIcon(iconPath))
+            # apply font and sizee to window title 
+            self.setWindowTitle("Hymns \u2192 Presentation")
+            self.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE)) # this sets text font for all children of self, the MainWindow (but not the window title - because that belongs to the desktop(?))
+            iconPath = str(Path('.','H2P-private-data','H2P-ico.png'))
+            self.setWindowIcon(QIcon(iconPath))
         
         # load graphic assets to buttons
 
