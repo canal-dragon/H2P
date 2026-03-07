@@ -28,8 +28,6 @@ fontName = 'Source Serif Pro' # or fontName = 'Andika' for san serif
 CCLIList = ['Hollingworth MC 610406', 'Add a new church name and CCLI No. here.']
 ccliNumber = '0'
 
-desktop = "Not set yet"
-
 # initialise list of differnt book codes found
 bookCodeList = []
 bookCodeChoice = "XXX" # for make index menu item
@@ -40,6 +38,10 @@ bookCodeChoice = "XXX" # for make index menu item
 tagList = ['STF 0', 'STF 0', 'STF 0', 'STF 0', 'STF 0', 'STF 0', 'STF 0'] # tags inserted into this list by UpdateBook and UpdateNumber callbacks.
 hymnNumbers = [0,0,0,0,0,0,0]
 hymnBCode = ["STF", "STF", "STF", "STF", "STF", "STF", "STF"] # to be updated with first in the hymnBookCode list before presenting interface.
+
+pwd = 'not set yet'    # these set at top of main
+desktop = 'not set yet'
+
 
 def make_tag_from_num(book, num):
     """Make the tag which becomes the key to the hymn in the hymnBook dict.
@@ -77,9 +79,9 @@ def get_desktop_path():
             winreg.CloseKey(key)
             return Path(desktop_path)
         except (FileNotFoundError, OSError):
-            return home_dir / "Desktop"  # Path concatenation with /
+            return str(home_dir) + "\Desktop"  # as best guess, Path concatenation with /
     
-    elif os_name == "darwin":
+    elif os_name == "darwin": # darwin means MacOs
         return home_dir / "Desktop"
     
     elif os_name.startswith("linux"):
@@ -101,12 +103,12 @@ def load_hymns():
 
     import pickle
     
-    p = Path('.','hymns')
+    p = Path(Path.cwd(),'hymns')
     
     filenameList = list(p.glob('**/*.txt'))
     stemnameList = filenameList.copy()
     # filenameList is a list of posixPath objects pointing to each of the hymn 'txt' files in the subdirectory tree.
-    hBLog = open(Path(".","H2P-private-data","hymnBook_reading_log.html"),"wt")
+    hBLog = open(Path(Path.cwd(),"H2P-private-data","hymnBook_reading_log.html"),"wt")
     hBLog.write('<b>Log of reading hymn files</b><br/>\n')
     hBLog.write('=======================<br/>\n')
     hBLog.write(' <br/>\n')
@@ -157,7 +159,7 @@ def load_hymns():
 
     # pickle a copy of the hymnbook
     db = [hymnBook, bookCodeList, message]
-    picklePath = Path('H2P-private-data', 'hymnbook.pickled')
+    picklePath = Path(Path.cwd(),'H2P-private-data', 'hymnbook.pickled')
     dbfile = open(picklePath, 'wb')
     pickle.dump(db, dbfile)
     dbfile.close()
@@ -170,8 +172,8 @@ def retrieveSettings():
     # The selection from this list will be handled by CCLIDialog in H2P_panel.py
     # On conclusion CCLIDialog should update this file.
 
-    if Path('.', 'H2P-private-data', 'ccli_number.txt').exists():
-        ccliFile = open(Path('.', 'H2P-private-data', 'ccli_number.txt'), 'r', encoding = 'utf-8')
+    if Path(Path.cwd(), 'H2P-private-data', 'ccli_number.txt').exists():
+        ccliFile = open(Path(Path.cwd(), 'H2P-private-data', 'ccli_number.txt'), 'r', encoding = 'utf-8')
         ccliData = ccliFile.read()
         ccliFile.close()
     else:
@@ -190,7 +192,7 @@ def retrieveSettings():
     if int(ccliNumber) == 0 :
         ccliNumber = '0'
 
-    if Path('.', 'H2P-private-data', 'black_between.txt').exists():
+    if Path(Path.cwd(), 'H2P-private-data', 'black_between.txt').exists():
         blackFile = open(Path('.', 'H2P-private-data', 'black_between.txt'),"r", encoding = 'utf-8')
         dividerData = blackFile.read()
         blackFile.close()

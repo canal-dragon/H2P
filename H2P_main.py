@@ -54,6 +54,10 @@ def show_summary(parent, message):
 
 def main(args):
 
+    # set useful directories
+    cfg.pwd = Path.cwd() # set once for location of all own data files.
+    cfg.desktop = cfg.get_desktop_path() # for output
+    
     # retreive persistent settings from two files in private data
     
     cfg.black_between, cfg.ccliNumber, cfg.CCLIList, cfg.desktop = cfg.retrieveSettings() 
@@ -65,10 +69,9 @@ def main(args):
     # read hymnbook.pickled or load AAA_NNN.txt files otherwise
     # needs app to have been started to post message box
 
-    privatePath = Path('H2P-private-data')
-    if privatePath.exists():
-        picklePath = Path('H2P-private-data', 'hymnbook.pickled')
-        if picklePath.exists():
+    if Path(cfg.pwd, 'H2P-private-data').is_dir(): # mac seems to go wrong at this point
+        picklePath = Path(cfg.pwd,'H2P-private-data', 'hymnbook.pickled')
+        if picklePath.is_file():
             dbfile = open(picklePath, 'rb')
             db = pickle.load(dbfile)
             cfg.hymnBook = db[0]
@@ -77,7 +80,7 @@ def main(args):
             message = "Using previously saved hymnbook.\n\n" + message
             message = message + "\n\nThe CCLI number is currently set to \n" + cfg.CCLIList[0] + "."
             dbfile.close()
-        else:
+        else: # compile a new pickled hymn book
             cfg.hymnBook, cfg.bookCodeList, message = cfg.load_hymns()
     else:
         message = "There is no subdirectory\n"
@@ -85,7 +88,8 @@ def main(args):
         message = message + "H2P-private-data must be present\n"
         message = message + "and contain certain files,\n"
         message = message + "otherwise H2P cannot run.\n"
-        message = message + "Please see H2P-help-text.pdf" 
+        message = message + "Please see H2P-help-text.pdf\n" 
+        message = message + str(cfg.pwd) +"\n"
 
     panel = MainWindow()
     panel.show()

@@ -461,8 +461,7 @@ class MainWindow(QMainWindow):
         """
         Show the log file in the webbrowser.
         """
-        cwd = os.getcwd() # so can navigate from here to H2P-private files to find help text
-        fullPathToLog = str(Path(cwd, 'H2P-private-data', 'hymnBook_reading_log.html'))
+        fullPathToLog = str(Path(cfg.pwd, 'H2P-private-data', 'hymnBook_reading_log.html'))
 
         webbrowser.open_new(r'file://'+fullPathToLog)
 
@@ -518,8 +517,7 @@ class MainWindow(QMainWindow):
             # sort tempIndx
             sortedIndx = dict(sorted(tempIndx.items()))
             # write it to a fileSourceSerifPro-Regular.otf
-            cwd = os.getcwd() # so can navigate from here to H2P-private files to find help text
-            fullPathToIndx = str(Path(cwd, 'H2P-private-data', book + '-index.html'))
+            fullPathToIndx = str(Path(cfg.pwd, 'H2P-private-data', book + '-index.html'))
             fh = open(fullPathToIndx,'wt')
             fh.write("<b>Index for " + cfg.bookCodeChoice + "</b><br/>\n")
             fh.write("============<br/>\n<br/>\n")
@@ -556,8 +554,7 @@ class MainWindow(QMainWindow):
             sortedIndx = dict(sorted(tempIndx.items(), 
                           key=lambda item: item[1]))
             # write it to a fileSourceSerifPro-Regular.otf
-            cwd = os.getcwd() # so can navigate from here to H2P-private files to find help text
-            fullPathToIndx = str(Path(cwd, 'H2P-private-data', book + '-index.html'))
+            fullPathToIndx = str(Path(cfg.pwd, 'H2P-private-data', book + '-index.html'))
             fh = open(fullPathToIndx,'wt')
             fh.write("<b>Index for " + cfg.bookCodeChoice + "</b><br/>\n") # Use both "\n" and HTML <\br> for good measure.
             fh.write("============<br/>\n<br/>\n")                 # Incase we want ot look at the file in an editor.
@@ -679,7 +676,7 @@ class MainWindow(QMainWindow):
         persist between sessions.
         """
         cfg.black_between = self.menuActionBlack.isChecked()
-        blackFile = open(Path('.', 'H2P-private-data', 'black_between.txt'),"w", encoding = 'utf-8')
+        blackFile = open(Path(cfg.pwd, 'H2P-private-data', 'black_between.txt'),"w", encoding = 'utf-8')
         if cfg.black_between:
             blackFile.write("Black divider\n")
         else:
@@ -693,8 +690,7 @@ class MainWindow(QMainWindow):
         """
         # have already imported Path, webbrowser, os at top of this source file
         
-        cwd = os.getcwd() # so can navigate from here to H2P-private files to find help text
-        fullPathToHelp = str(Path(cwd, 'H2P-private-data', 'H2P-help-txt.pdf'))
+        fullPathToHelp = str(Path(cfg.pwd, 'H2P-private-data', 'H2P-help-txt.pdf'))
 
         webbrowser.open_new(r'file://'+fullPathToHelp)
         return
@@ -1155,23 +1151,23 @@ class MainWindow(QMainWindow):
 
             match cfg.darkOrLight:
                 case 0 :
-                    prs = Presentation(Path('.', 'H2P-private-data', 'dark_base_sans.pptx'))
+                    prs = Presentation(Path(cfg.pwd, 'H2P-private-data', 'dark_base_sans.pptx'))
                     cfg.fontName = 'Andika' 
                     color_num = 1 # this is a number in the starting presetations colour scheme. 
                 case 1 :
-                    prs = Presentation(Path('.', 'H2P-private-data', 'dark_base_serif.pptx'))
+                    prs = Presentation(Path(cfg.pwd, 'H2P-private-data', 'dark_base_serif.pptx'))
                     color_num = 1
                     cfg.fontName = 'Source Serif Pro'
                 case 2 :
-                    prs = Presentation(Path('.', 'H2P-private-data', 'light_base_sans.pptx'))
+                    prs = Presentation(Path(cfg.pwd, 'H2P-private-data', 'light_base_sans.pptx'))
                     color_num = 1
                     cfg.fontName = 'Andika' 
                 case 3 :
-                    prs = Presentation(Path('.', 'H2P-private-data', 'light_base_serif.pptx'))
+                    prs = Presentation(Path(cfg.pwd, 'H2P-private-data', 'light_base_serif.pptx'))
                     color_num = 1
                     cfg.fontName = 'Source Serif Pro'
                 case _ : # should never get here as values set by comboBox, but default
-                    prs = Presentation(Path('.', 'H2P-private-data', 'dark_base_sans.pptx'))
+                    prs = Presentation(Path(cfg.pwd, 'H2P-private-data', 'dark_base_sans.pptx'))
                     color_num = 1
                     cfg.fontName = 'Andika' 
                 
