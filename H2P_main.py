@@ -55,8 +55,12 @@ def show_summary(parent, message):
 def main(args):
 
     # set useful directories
-    cfg.pwd = Path(__file__).parent # set once - directory this file is run from, i.e. location of own data subdirectories.
-    print("In main .. cfg.pwd = ",str(cfg.pwd))
+    os_name = sys.platform
+    if os_name == "win32":
+        cfg.pwd = Path.cwd() # works in linux but not in macos
+    else: # for linux and macos 
+        cfg.pwd = Path(__file__).parent # set once - directory this file is run from, i.e. location of own data subdirectories.
+
     cfg.desktop = cfg.get_desktop_path() # for output
     
     # retreive persistent settings from two files in private data
