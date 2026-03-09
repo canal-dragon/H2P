@@ -11,7 +11,7 @@ that
         inject_attribution() at end of each hymn, inject_attribution()
         inject_blank_slide() between verses
     
-CJCJ 03-02-2026
+CJCJ 09-03-2026
 """
 
 import sys

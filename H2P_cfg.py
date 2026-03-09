@@ -3,7 +3,7 @@ H2P component
 
 Module to help cart 'global' variables about
 
-CJCJ 30/11/2025
+CJCJ 09/03/2026
 """
 
 import sys
@@ -16,7 +16,7 @@ import H2P_Classes # from local source file
 # Variable declared here become global variables
 # anywhere this file is imported
 
-vers = "3 Feb 2026"
+vers = "9 Mar 2026"
 
 # settings
 
@@ -79,7 +79,7 @@ def get_desktop_path():
             winreg.CloseKey(key)
             return Path(desktop_path)
         except (FileNotFoundError, OSError):
-            return str(home_dir) + "\Desktop"  # as best guess, Path concatenation with /
+            return home_dir / "Desktop"  # as best guess, Path concatenation with /
     
     elif os_name == "darwin": # darwin means MacOs
         return home_dir / "Desktop"
@@ -103,12 +103,12 @@ def load_hymns():
 
     import pickle
     
-    p = Path(Path.cwd(),'hymns')
+    p = Path(pwd, 'hymns')
     
     filenameList = list(p.glob('**/*.txt'))
     stemnameList = filenameList.copy()
     # filenameList is a list of posixPath objects pointing to each of the hymn 'txt' files in the subdirectory tree.
-    hBLog = open(Path(Path.cwd(),"H2P-private-data","hymnBook_reading_log.html"),"wt")
+    hBLog = open(Path(pwd, "H2P-private-data", "hymnBook_reading_log.html"),"wt")
     hBLog.write('<b>Log of reading hymn files</b><br/>\n')
     hBLog.write('=======================<br/>\n')
     hBLog.write(' <br/>\n')
@@ -159,7 +159,7 @@ def load_hymns():
 
     # pickle a copy of the hymnbook
     db = [hymnBook, bookCodeList, message]
-    picklePath = Path(Path.cwd(),'H2P-private-data', 'hymnbook.pickled')
+    picklePath = Path(pwd,'H2P-private-data', 'hymnbook.pickled')
     dbfile = open(picklePath, 'wb')
     pickle.dump(db, dbfile)
     dbfile.close()
@@ -172,8 +172,8 @@ def retrieveSettings():
     # The selection from this list will be handled by CCLIDialog in H2P_panel.py
     # On conclusion CCLIDialog should update this file.
 
-    if Path(Path.cwd(), 'H2P-private-data', 'ccli_number.txt').exists():
-        ccliFile = open(Path(Path.cwd(), 'H2P-private-data', 'ccli_number.txt'), 'r', encoding = 'utf-8')
+    if Path(pwd, 'H2P-private-data', 'ccli_number.txt').exists():
+        ccliFile = open(Path(pwd, 'H2P-private-data', 'ccli_number.txt'), 'r', encoding = 'utf-8')
         ccliData = ccliFile.read()
         ccliFile.close()
     else:
@@ -192,7 +192,7 @@ def retrieveSettings():
     if int(ccliNumber) == 0 :
         ccliNumber = '0'
 
-    if Path(Path.cwd(), 'H2P-private-data', 'black_between.txt').exists():
+    if Path(pwd, 'H2P-private-data', 'black_between.txt').exists():
         blackFile = open(Path('.', 'H2P-private-data', 'black_between.txt'),"r", encoding = 'utf-8')
         dividerData = blackFile.read()
         blackFile.close()

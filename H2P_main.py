@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #
 
-# This version 03/02/2026 
+# This version 09/03/2026 
 
 
 import sys
@@ -55,7 +55,8 @@ def show_summary(parent, message):
 def main(args):
 
     # set useful directories
-    cfg.pwd = Path.cwd() # set once for location of all own data files.
+    cfg.pwd = Path(__file__).parent # set once - directory this file is run from, i.e. location of own data subdirectories.
+    print("In main .. cfg.pwd = ",str(cfg.pwd))
     cfg.desktop = cfg.get_desktop_path() # for output
     
     # retreive persistent settings from two files in private data
@@ -69,7 +70,7 @@ def main(args):
     # read hymnbook.pickled or load AAA_NNN.txt files otherwise
     # needs app to have been started to post message box
 
-    if Path(cfg.pwd, 'H2P-private-data').is_dir(): # mac seems to go wrong at this point
+    if Path(cfg.pwd, 'H2P-private-data').is_dir(): 
         picklePath = Path(cfg.pwd,'H2P-private-data', 'hymnbook.pickled')
         if picklePath.is_file():
             dbfile = open(picklePath, 'rb')
