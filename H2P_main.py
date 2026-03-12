@@ -21,8 +21,34 @@
 #  MA 02110-1301, USA.
 #
 
-# This version 09/03/2026 
+# This version 09/03/2026
 
+# Development from here
+# =====================
+#
+# Make a much more cabable method of finding its own data files.
+# This is necessary because, when it is compiled with pyinstaller,
+# it finds itself opened in a temporary working directory,
+# or the root directory (?) on a mac. The compiled version works on
+# Windows but gain, not on Linux. Therefore IN THE FIRST INSTANCE,
+# I can use the Linux case to test. 
+#
+# Objective is to correctly set cfg.cwr
+# test is Path(cfg.cwr, 'H2P-private-data').is.dir()
+#
+# Therefore ...
+# (import pathlib as Path) ...
+# look in Path.cwd() --> test (this should be enough for windows)
+#
+# if Path.is_file(Path.home(),".h2p.dat") .. i.e. path previously found and saved --> read Path from there.
+#
+# search from Path.home() --> this may take some time.
+#
+# test : yes--> save path to new text file Path(Path.home(),
+# if no, start app anyway --> use menu option, get_dir_box to set path manually.
+# .. then save that to the Path(Path.home,".h2p.dat")
+# 
+# This relies on Path.home() always giving the right answer.. does it? 
 
 import sys
 import os
@@ -51,15 +77,59 @@ def show_summary(parent, message):
     button = dlg.exec()
     return
 
+def patientez(parent, message):
+    """
+    Show message when looking for H2P-private-data directory with a file search
+    """
+    dlg = QMessageBox(parent)
+    dlg.setWindowTitle("H2P finding data directory")
+    dlg.setFont(QFont(cfg.families[0],14))
+    dlg.setText(message)
+    button = dlg.exec()
+    return
+
+def find_files(pattern, search_path):
+    """This from https://tutorialspoint.com/article/How-tofind-a-file-using-Python"""
+    search_path = Path(search_path)
+    matched_files = [file for file in search_path.rglob(pattern)] # rglob means recursive search vers of glob
+    return matched_files
 
 def main(args):
 
-    # set useful directories
-    os_name = sys.platform
-    if os_name == "win32":
-        cfg.pwd = Path.cwd() # works in linux but not in macos
-    else: # for linux and macos 
-        cfg.pwd = Path(__file__).parent # set once - directory this file is run from, i.e. location of own data subdirectories.
+    # Start App interface starts here
+
+    app = QApplication(sys.argv)
+    panel = MainWindow()
+
+    # set useful directories -
+    # When compiled with pyinstaller, finding the intended working directory,
+    # (wehre H2P is launched from) may be a bit of a game.
+
+    if Path(Path.cwd(), "H2P-private-data").is_dir(): # The simple case in which Path.cwd() works
+        cfg.pwd = Path.cwd().resolve() # abs path, works in Windows but not in pyinstaller-compiled case for macos or linux 
+    else: # for compiled cases on linux or macos
+        if Path(Path.home(),".h2p.dat").exists(): # path has been saved before
+            f = open(Path(Path.home(),".h2p.dat"),"rt")
+            cfg.pwd = Path(f.readln()) # only take first line. 
+            print(str(cfg.pwd))
+        else: # go looking for it
+            message = "Looking for H2P-private-data directory.\nThis may take some time.\n"
+            message = message +"We only have to do this once.\n"
+            message = message + "Starting from\n" + str(Path.home())
+            patientez(panel, message)
+            possibleLocations = find_files("H2P-private-data", Path.home()) # might this actually be fairly quick?
+            for i in range(0,len(possibleLocations)):
+                print(str(possibleLocations[i]))
+            if len(possibleLocations) > 1:
+                for i in range(0,len(possibleLocations)):
+                    if "H2P" in possibleLocations[i]:
+                        possibleLocations.insert(0,possibleLocations[i]) # makes the 'best guess' last in the lsit that 
+            fsave = open(Path(Path.home(),".h2p.dat"),wt)
+            for i in range(0,len(possibleLocations)):
+                fsave.writeln(str(possibleLocations[i]).parent())
+            fsave.close()
+            cfg.pwd = possibleLocations[0].parent()
+            print("Best location from a find = ", cfg.pwd)
 
     cfg.desktop = cfg.get_desktop_path() # for output
     
@@ -67,9 +137,6 @@ def main(args):
     
     cfg.black_between, cfg.ccliNumber, cfg.CCLIList, cfg.desktop = cfg.retrieveSettings() 
 
-    # Start App interface starts here
-
-    app = QApplication(sys.argv)
     
     # read hymnbook.pickled or load AAA_NNN.txt files otherwise
     # needs app to have been started to post message box
@@ -95,7 +162,7 @@ def main(args):
         message = message + "otherwise H2P cannot run.\n"
         message = message + "Please see H2P-help-text.pdf\n" 
         message = message + str(cfg.pwd) +"\n"
-
+        message = message + str(Path.home()) +"\n"
     panel = MainWindow()
     panel.show()
     show_summary(panel, message)
