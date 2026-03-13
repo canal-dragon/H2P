@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['windows-latest', 'ubuntu-latest', 'macos-15-intel']
+        os: ['windows-latest', 'ubuntu-latest', 'macos-15-x86_64']
 
     env:
       MAIN_PY_FILE: 'H2P_main.py'  # Define the path to your main.py file here
@@ -37,7 +37,7 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller --onefile  --icon ./H2P-private-data/H2P-ico.ico --windowed --target-arch=intel ${{ env.MAIN_PY_FILE }}
+        pyinstaller --onefile  --icon ./H2P-private-data/H2P-ico.ico --windowed --target-arch=x86_64 ${{ env.MAIN_PY_FILE }}
       working-directory: ./
 
     - name: Create Artifact (Windows)
@@ -55,7 +55,7 @@ jobs:
         path: dist/
 
     - name: Create Artifact (macOS)
-      if: matrix.os == 'macos-15-intel'
+      if: matrix.os == 'macos-15-x86_64'
       uses: actions/upload-artifact@v4
       with:
         name: macos-executables
