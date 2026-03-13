@@ -106,30 +106,31 @@ def main(args):
     # (wehre H2P is launched from) may be a bit of a game.
 
     if Path(Path.cwd(), "H2P-private-data").is_dir(): # The simple case in which Path.cwd() works
-        cfg.pwd = Path.cwd().resolve() # abs path, works in Windows but not in pyinstaller-compiled case for macos or linux 
+        cfg.pwd = Path.cwd().resolve() # abs path, works in Windows but not in pyinstaller-compiled case for macos or linux
     else: # for compiled cases on linux or macos
         if Path(Path.home(),".h2p.dat").exists(): # path has been saved before
             f = open(Path(Path.home(),".h2p.dat"),"rt")
-            cfg.pwd = Path(f.readln()) # only take first line. 
-            print(str(cfg.pwd))
+            firstLine = f.readline()
+            print("Read saved directory as >"+firstLine.strip())
+            cfg.pwd = Path(firstLine.strip()) # only take first line.
+            f.close()
+            # patientez(panel,"Path saved previously" + str(cfg.pwd))
         else: # go looking for it
             message = "Looking for H2P-private-data directory.\nThis may take some time.\n"
             message = message +"We only have to do this once.\n"
-            message = message + "Starting from\n" + str(Path.home())
+            message = message + "Starting search from \n" + str(Path.home())
             patientez(panel, message)
             possibleLocations = find_files("H2P-private-data", Path.home()) # might this actually be fairly quick?
-            for i in range(0,len(possibleLocations)):
-                print(str(possibleLocations[i]))
             if len(possibleLocations) > 1:
                 for i in range(0,len(possibleLocations)):
-                    if "H2P" in possibleLocations[i]:
+                    if "H2P" in possibleLocations[i].parts:
                         possibleLocations.insert(0,possibleLocations[i]) # makes the 'best guess' last in the lsit that 
-            fsave = open(Path(Path.home(),".h2p.dat"),wt)
+            fsave = open(Path(Path.home(),".h2p.dat"),"wt")
             for i in range(0,len(possibleLocations)):
-                fsave.writeln(str(possibleLocations[i]).parent())
+                fsave.write(str(possibleLocations[i].parent)+"\n")
             fsave.close()
-            cfg.pwd = possibleLocations[0].parent()
-            print("Best location from a find = ", cfg.pwd)
+            cfg.pwd = Path(possibleLocations[0].parent)
+            patientez(panel, "Best location from a find = " + str(cfg.pwd))
 
     cfg.desktop = cfg.get_desktop_path() # for output
     
