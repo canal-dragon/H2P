@@ -4,7 +4,7 @@ Class to contain a hymn
 Class to contain the whole hymn book once compiled from all available hymns.
 
 Part of H2P source code
-CJCJ 09/03/2026
+CJCJ 13/03/2026
 """
 import H2P_cfg as cfg
 

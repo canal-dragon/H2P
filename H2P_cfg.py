@@ -3,7 +3,7 @@ H2P component
 
 Module to help cart 'global' variables about
 
-CJCJ 09/03/2026
+CJCJ 13/03/2026
 """
 
 import sys
@@ -16,19 +16,21 @@ import H2P_Classes # from local source file
 # Variable declared here become global variables
 # anywhere this file is imported
 
-vers = "9 Mar 2026"
+vers = "13 Mar 2026"
 
 # settings
 
-darkOrLight = 1 # default dark theme with white text
+darkOrLight = 1 # default dark theme with white text for presentation
 black_between = True
 hymnBook = {}
 families = '' # for fonts
 fontName = 'Source Serif Pro' # or fontName = 'Andika' for san serif
 CCLIList = ['Hollingworth MC 610406', 'Add a new church name and CCLI No. here.']
 ccliNumber = '0'
+colStr = "color: maroon" # default title colouring for interface panel
+colStr = "color: gold"
 
-# initialise list of differnt book codes found
+# initialise list of different book codes found
 bookCodeList = []
 bookCodeChoice = "XXX" # for make index menu item
 

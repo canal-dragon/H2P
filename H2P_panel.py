@@ -11,7 +11,7 @@ that
         inject_attribution() at end of each hymn, inject_attribution()
         inject_blank_slide() between verses
     
-CJCJ 09-03-2026
+CJCJ 13-03-2026
 """
 
 import sys
@@ -191,7 +191,7 @@ class MainWindow(QMainWindow):
         # the text fields for left side
         
         labelLeftHeader = QLabel("Choose hymns")
-        labelLeftHeader.setStyleSheet("color: maroon") # changing colour resets font size
+        labelLeftHeader.setStyleSheet(cfg.colStr) # changing colour resets font size
         labelLeftHeader.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE)) # so have to change it back
 
         layoutLeft.addWidget(labelLeftHeader)
@@ -203,7 +203,7 @@ class MainWindow(QMainWindow):
         validNumber = QRegularExpressionValidator(RegX) #Works better than QIntValidator which does not allow a blank.
         
         numberLabel1 = QLabel("1.")
-        numberLabel1.setStyleSheet("color: maroon")
+        numberLabel1.setStyleSheet(cfg.colStr)
         numberLabel1.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
         numberLabel1.setMinimumWidth(MIN_NUMBER_WIDTH)
 
@@ -231,7 +231,7 @@ class MainWindow(QMainWindow):
         layoutLeft.addLayout(layout1)
 
         numberLabel2 = QLabel("2.")
-        numberLabel2.setStyleSheet("color: maroon")
+        numberLabel2.setStyleSheet(cfg.colStr)
         numberLabel2.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
         numberLabel2.setMinimumWidth(MIN_NUMBER_WIDTH)
 
@@ -259,7 +259,7 @@ class MainWindow(QMainWindow):
         layoutLeft.addLayout(layout2)
 
         numberLabel3 = QLabel("3.")
-        numberLabel3.setStyleSheet("color: maroon")
+        numberLabel3.setStyleSheet(cfg.colStr)
         numberLabel3.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
         numberLabel3.setMinimumWidth(MIN_NUMBER_WIDTH)
         
@@ -287,7 +287,7 @@ class MainWindow(QMainWindow):
         layoutLeft.addLayout(layout3)
 
         numberLabel4 = QLabel("4.")
-        numberLabel4.setStyleSheet("color: maroon")
+        numberLabel4.setStyleSheet(cfg.colStr)
         numberLabel4.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
         numberLabel4.setMinimumWidth(MIN_NUMBER_WIDTH)
 
@@ -316,7 +316,7 @@ class MainWindow(QMainWindow):
         layoutLeft.addLayout(layout4)
 
         numberLabel5 = QLabel("5.")
-        numberLabel5.setStyleSheet("color: maroon")
+        numberLabel5.setStyleSheet(cfg.colStr)
         numberLabel5.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
         numberLabel5.setMinimumWidth(MIN_NUMBER_WIDTH)
 
@@ -345,7 +345,7 @@ class MainWindow(QMainWindow):
         layoutLeft.addLayout(layout5)
 
         numberLabel6 = QLabel("6.")
-        numberLabel6.setStyleSheet("color: maroon")
+        numberLabel6.setStyleSheet(cfg.colStr)
         numberLabel6.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
         numberLabel6.setMinimumWidth(MIN_NUMBER_WIDTH)
 
@@ -374,7 +374,7 @@ class MainWindow(QMainWindow):
         layoutLeft.addLayout(layout6)
 
         numberLabel7 = QLabel("7.")
-        numberLabel7.setStyleSheet("color: maroon")
+        numberLabel7.setStyleSheet(cfg.colStr)
         numberLabel7.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
         numberLabel7.setMinimumWidth(MIN_NUMBER_WIDTH)
 
@@ -406,7 +406,7 @@ class MainWindow(QMainWindow):
         dummyHeader1 = QLabel(' ')
         dummyHeader1.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE/4)) # to create a small linespace
         themeHeader = QLabel('Select theme')
-        themeHeader.setStyleSheet("color: maroon")
+        themeHeader.setStyleSheet(cfg.colStr)
         themeHeader.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
 
         self.comboTheme = QComboBox()  # This one not editable. 
@@ -426,7 +426,7 @@ class MainWindow(QMainWindow):
         dummyHeader2 = QLabel(' ')
         dummyHeader2.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE/4)) # to create a small linespace
         self.buttonMake = QPushButton('Make presentation')
-        self.buttonMake.setStyleSheet("color: maroon")
+        self.buttonMake.setStyleSheet(cfg.colStr)
         self.buttonMake.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
         self.buttonMake.clicked.connect(self.writePresentation) # darkOrLight is set by ThemeIndexUpdate
 
@@ -475,7 +475,7 @@ class MainWindow(QMainWindow):
 
             layout = QVBoxLayout()
             message = QLabel("Which book source do you want to index?")
-            message.setStyleSheet("color: maroon")
+            message.setStyleSheet(cfg.colStr)
             message.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
             self.combo = QComboBox()
             self.combo.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
@@ -593,7 +593,7 @@ class MainWindow(QMainWindow):
              "Can delete to remove entry. \n" + \
              "(Use no digit characters in church name \n" + \
              "and only digit characters in number).\n")
-            message.setStyleSheet("color: maroon")
+            message.setStyleSheet(cfg.colStr)
             message.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
             self.combo = QComboBox()
             self.combo.setFont(QFont(cfg.families[0],INTERFACE_FONT_SIZE))
@@ -1407,6 +1407,6 @@ class MainWindow(QMainWindow):
         
         time.sleep(0.3)
         # self.buttonMake.setText("Make presentation")
-        self.buttonMake.setStyleSheet("color: maroon") # back to normal colour
+        self.buttonMake.setStyleSheet(cfg.colStr) # back to normal colour
         QApplication.processEvents()
 
