@@ -3,7 +3,7 @@ H2P component
 
 Module to help cart 'global' variables about
 
-CJCJ 13/03/2026
+CJCJ 05/05/2026
 """
 
 import sys
@@ -16,7 +16,7 @@ import H2P_Classes # from local source file
 # Variable declared here become global variables
 # anywhere this file is imported
 
-vers = "13 Mar 2026"
+vers = "05 Apr 2026"
 
 # settings
 
