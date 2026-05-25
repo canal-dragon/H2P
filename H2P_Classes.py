@@ -28,9 +28,10 @@ class HYMN():
             hBlog.write("** Problem with file: " + stemname + ". There should not be a file for hymn number 0.<br/>\n")
             success = False
         else:
-            [success, verse, chorus, attribution, rCode, firstLine, longestLine, \
+            [success, modTime, verse, chorus, attribution, rCode, firstLine, longestLine, \
             mostLines, hasChorus, bookVerseNumber, chorusFirst] = self.readhymn(filename, hBlog)
-        
+
+        self.modTime = modTime # time in seconds
         self.verse = verse # is a list of verses, each one being a list of lines
         self.chorus = chorus
         self.hasChorus = hasChorus
@@ -70,11 +71,14 @@ class HYMN():
         """
 
         import os
+        import time
         import re # regex methods
 
         ABS_MAX_CHARS = 62
         ABS_MAX_LINES = 12
-    
+
+        modTime = os.path.getmtime(filen) # gives a time in seconds
+        # modDate = time.ctime(modTime) # cpnverts to a printable time stamp
         stemname = os.path.split(filen)[-1]
 
         success = True
@@ -95,58 +99,58 @@ class HYMN():
             hBlog.write("** Problem with file: " + stemname + ". There are no verses or even a chorus.<br/>\n")
             success = False 
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
             
         if len(vEndIndex) <  len(vStartIndex):
             hBlog.write("** Problem with file: " + stemname + ". More starts of verses '{' are found than ends of verses '}'.<br/>\n")
             success = False 
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
         elif len(vEndIndex) >  len(vStartIndex):
             hBlog.write("** Problem with file: " + stemname + " More ends of verses '{' are found than ends of verses '}'.<br/>\n")
             success = False 
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
         if len(cStartIndex) > 1: # could be 0 choruses, but no more than 1
             hBlog.write("** Problem with file: " + stemname + ". More than 1 start of chorus (backward slash) is found.<br/>\n")
             success = False
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
         if len(cEndIndex) > 1:
             hBlog.write("** Problem with file: " + stemname + ". More than 1 end of chorus (forward slash) is found.<br/>\n")
             success = False 
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
         if len(cEndIndex) != len(cStartIndex):
             hBlog.write("** Problem with file: " + stemname + ". Chorus brackets (backwards and forwards slash) not balanced.<br/>\n")
             success = False 
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
         if len(aStartIndex) > 1: # allow no rights code, but not more than 1
             hBlog.write("** Problem with file: " + stemname + ". More than 1 start of attribution '[' is found.<br/>\n")
             success = False 
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
         if len(aEndIndex) > 1:
             hBlog.write("** Problem with file: " + stemname + ". More than 1 end of attribution ']' is found.<br/>\n")
             success = False 
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
         if len(aEndIndex) != len(aStartIndex):
             hBlog.write("** Problem with file: " + stemname + ". Attribution brackets not balanced.<br/>\n")
             success = False 
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
         if len(rStartIndex) > 1: # allow no rights code, but not more than 1
             hBlog.write("** Problem with file: " + stemname + ". More than 1 start of rights code '<' is found.<br/>\n")
             success = False 
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
         if len(rEndIndex) > 1:
             hBlog.write("** Problem with file: " + stemname + ". More than 1 end of rights code '>' is found.<br/>\n")
             success = False 
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
 
         # read verses
         verse = []
@@ -255,10 +259,10 @@ class HYMN():
             hBlog.write("** Problem with file: " + stemname + ". More than " + str(ABS_MAX_CHARS) + " characters found ina line.<br/>\n")
             success = False
         if success:
-            return [success, verse, chorus, attribution, rCode, firstLine, longestLine, mostLines, hasChorus, bookVerseNumber, chorusFirst]
+            return [success, modTime, verse, chorus, attribution, rCode, firstLine, longestLine, mostLines, hasChorus, bookVerseNumber, chorusFirst]
         else:
             print("*** Failure to read hymn file: ", filen)
-            return [success, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
+            return [success, modTime, [], [], "bad hymn file", "bad hymn file", "bad hymn file", 0, 0, False, {}, False]
       
          # end of readhymn
 

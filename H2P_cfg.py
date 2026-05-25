@@ -3,7 +3,7 @@ H2P component
 
 Module to help cart 'global' variables about
 
-CJCJ 05/05/2026
+CJCJ 13/03/2026
 """
 
 import sys
@@ -16,7 +16,7 @@ import H2P_Classes # from local source file
 # Variable declared here become global variables
 # anywhere this file is imported
 
-vers = "05 Apr 2026"
+vers = "13 Mar 2026"
 
 # settings
 
@@ -43,6 +43,9 @@ hymnBCode = ["STF", "STF", "STF", "STF", "STF", "STF", "STF"] # to be updated wi
 
 pwd = 'not set yet'    # these set at top of main
 desktop = 'not set yet'
+
+# switch on some hymn checking (presence of rcode and attribution)
+checking = False
 
 
 def make_tag_from_num(book, num):
@@ -104,6 +107,7 @@ def load_hymns():
     """
 
     import pickle
+    import time
     
     p = Path(pwd, 'hymns')
     
@@ -117,14 +121,16 @@ def load_hymns():
     hBLog.write("Files are not read in hymn-number order - see index in file menu.<br>\n")
     hBLog.write(' <br/>\n')
     
-    bookCodeDict= {}
-    
+    bookCodeDict = {}
+    latestMod = 0 # seconds (to be converted to a date)
     for i in range(0,len(filenameList)):
         # it is convenient to have paths as strings for the sake of reporting errors etc.
         stemnameList[i] = os.path.split(filenameList[i])[-1]
         filenameList[i] = str(filenameList[i])
         hymn = H2P_Classes.HYMN(filenameList[i], hBLog) # hymn is a HYMN object
         print(hymn)
+        if hymn.modTime > latestMod:
+            latestMod = hymn.modTime
         
         hBLog.write(("<pre>File: " + stemnameList[i]).ljust(25) + hymn.firstLine.ljust(54) + str(hymn.topBookVerseNumber).ljust(3) + "verses  " + str(hymn.longestLine).rjust(2) + "  " + str(hymn.mostLines).rjust(2) + "</pre>\n") # <br/> not needed
         if hymn.firstLine == "bad hymn file":
@@ -152,7 +158,8 @@ def load_hymns():
     hBLog.close() 
       
     message = "H2P has found "+str(len(filenameList))+" hymn files."
-    message  = message + "\nThe hymnBook contains "+str(len(hymnBook))+" hymns."
+    message = message + "\nThe hymnBook contains "+str(len(hymnBook))+" hymns,"
+    message = message + "\nthe last modified, " + time.strftime("%d-%m-%Y",time.strptime(time.ctime(latestMod)))
     
     dudHymnFiles = len(filenameList) - len(hymnBook)
     if dudHymnFiles > 0:

@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #
 
-# This version 05/04/2026
+# This version 13/03/2026
 
 import sys
 import os
@@ -51,11 +51,52 @@ def show_summary(title, parent, message):
     return
 
 
-def find_files(pattern, search_path):
-    """This from https://tutorialspoint.com/article/How-tofind-a-file-using-Python"""
-    search_path = Path(search_path)
-    matched_files = [file for file in search_path.rglob(pattern)] # rglob means recursive search vers of glob
-    return matched_files
+def find_first_subdirectory(target_name: str) -> Path | None:
+    """
+    Gemini generated function
+    Path module must be imported in domain above this def.
+    i.e. from pathlib import Path
+    
+    Searches the user's home directory for the first sub-directory matching target_name.
+    
+    - Excludes iCloud and OneDrive directories.
+    - Does not follow symbolic links.
+    
+    Returns:
+        Path: A PosixPath object of the found directory, or None if not found.
+    """
+    home = Path.home()
+    
+    # Define directories to skip (case-insensitive check handled below)
+    skip_dirs = {"iclouddrive", "onedrive"}
+    
+    # rglob("*") yields all files and directories recursively
+    for path in home.rglob("*"):
+        # Skip symbolic links immediately to avoid infinite loops or lifting restrictions
+        if path.is_symlink():
+            continue
+            
+        # Check if the path is a directory and matches our target name
+        if path.is_dir() and path.name == target_name:
+            
+            # Check the parts of the path to see if it lives inside iCloud or OneDrive
+            # path.parts breaks the path into a tuple (e.g., ('/', 'Users', 'username', 'OneDrive', 'Documents'))
+            path_parts_lower = [part.lower() for part in path.parts]
+            
+            if any(skip in path_parts_lower for skip in skip_dirs):
+                continue  # Skip it if it's inside an ignored cloud directory
+                
+            return path  # Return the first match found as a PosixPath object
+            
+    return None
+
+# Example Usage of the above routine:
+# result = find_first_subdirectory("ProjectX")
+# if result:
+#     print(f"Found it at: {result}")
+# else:
+#     print("Directory not found.")
+
 
 
 def main(args):
@@ -91,17 +132,16 @@ def main(args):
             message = message +"We only have to do this once.\n"
             message = message + "Starting search from \n" + str(Path.home())
             show_summary("H2P finding data directory", panel, message)
-            possibleLocations = find_files("H2P-private-data", Path.home()) # might this actually be fairly quick?
-            if len(possibleLocations) > 1:
-                for i in range(0,len(possibleLocations)):
-                    if "H2P" in possibleLocations[i].parts:
-                        possibleLocations.insert(0,possibleLocations[i]) # makes the 'best guess' last in the lsit that 
-            fsave = open(Path(Path.home(),".h2p.dat"),"wt")
-            for i in range(0,len(possibleLocations)):
-                fsave.write(str(possibleLocations[i].parent)+"\n")
-            fsave.close()
-            cfg.pwd = Path(possibleLocations[0].parent)
-            patientez(panel, "Best location from a find = " + str(cfg.pwd))
+            possibleLocation = find_first_subdirectory("H2P-private-data") 
+            if  possibleLocation:
+                fsave = open(Path(Path.home(),".h2p.dat"),"wt")
+                fsave.write(str(possibleLocation.parent)+"\n")
+                fsave.close()
+            else:
+                print("***ERROR could not find H2P's home diectory - please provide in user's home/.h2p.dat")
+                return -1
+            cfg.pwd = Path(possibleLocation.parent)
+            show_summary("Found H2P's directory", panel, "Found cwr as " + str(cfg.pwd))
 
     cfg.desktop = cfg.get_desktop_path() # for output
     

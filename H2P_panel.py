@@ -513,7 +513,15 @@ class MainWindow(QMainWindow):
             for tag in cfg.hymnBook:
                 [num, book] = cfg.get_num_from_tag(tag)
                 if book == cfg.bookCodeChoice:
-                    tempIndx.update({num: cfg.hymnBook[tag].firstLine})
+                    # use lines here to flag lack of [attribute] or lack of <Copyrigh code>
+                    addStr = ""
+                    if cfg.checking:
+                        if len(cfg.hymnBook[tag].rCode) == 0:
+                            addStr = addStr + " ***no rCode ***"
+                        if len(cfg.hymnBook[tag].attribution) == 0:
+                            addStr = addStr + " ***no attribution ***"
+                    tempIndx.update({num: cfg.hymnBook[tag].firstLine + addStr})
+                    
             # sort tempIndx
             sortedIndx = dict(sorted(tempIndx.items()))
             # write it to a fileSourceSerifPro-Regular.otf
